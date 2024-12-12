@@ -17,6 +17,11 @@ function crearInventario() {
     },
   ];
 
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(value);
   return {
     agregarProducto: (nombre, cantidad, precio) => {
       const newProduct = { nombre, cantidad, precio };
@@ -51,35 +56,31 @@ function crearInventario() {
       }
     },
     consultarProducto: (nombre) => {
-      let USDollar = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
       const productoExistente = productos.find(
         (producto) => producto.nombre === nombre,
       );
       if (productoExistente) {
         console.log(
-          `${productoExistente.nombre} - Cantidad: ${productoExistente.cantidad}, Precio: ${USDollar.format(productoExistente.precio)}`,
+          `${productoExistente.nombre} - Cantidad: ${productoExistente.cantidad}, Precio: ${formatCurrency(productoExistente.precio)}`,
         );
       } else {
         console.log(`El producto ${nombre} no existe`);
       }
     },
     mostrarInventario: () => {
-      let USDollar = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
       console.log("--- INVENTARIO ---");
       productos.forEach((producto, index) => {
         console.log(
-          `${index + 1}. ${producto.nombre} - Cantidad: ${producto.cantidad}, Precio: ${USDollar.format(producto.precio)}`,
+          `${index + 1}. ${producto.nombre} - Cantidad: ${producto.cantidad}, Precio: ${formatCurrency(producto.precio)}`,
         );
       });
     },
     calcularValorTotal: () => {
-      // let total
+      let total = 0;
+      productos.forEach((producto) => {
+        total += producto.precio * producto.cantidad;
+      });
+      console.log(`Valor total del inventario: ${formatCurrency(total)}`);
     },
   };
 }
@@ -93,3 +94,4 @@ miInventario.actualizarPrecio("Kiwis", 10);
 miInventario.actualizarPrecio("Manzanas", 10);
 miInventario.consultarProducto("Manzanas");
 miInventario.mostrarInventario();
+miInventario.calcularValorTotal();
